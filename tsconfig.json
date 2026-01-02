@@ -13,9 +13,10 @@
                 "skipLibCheck": true,
                 "allowJs": false,
                 "moduleResolution": "Bundler",
-                "allowImportingTsExtensions": true,
+                // "allowImportingTsExtensions": true, // 削除
                 "isolatedModules": true,
-                "noEmit": true,
+                "noEmit": false, // true → false
+                "outDir": "./dist",
                 "jsx": "react-jsx",
                 "strict": true,
                 "allowSyntheticDefaultImports": true,
