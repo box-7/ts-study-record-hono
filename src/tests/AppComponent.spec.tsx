@@ -18,6 +18,7 @@ it('タイトルをレンダリングする', async () => {
     expect(screen.getByText('学習記録一覧')).toBeInTheDocument();
   }, { timeout: 2000 }); // タイムアウトを延長
 });
+
 it('isLoadingがtrueのとき、ローディング・スピナーとテキストを表示する', () => {
   render(
     <ChakraProvider value={defaultSystem}>
