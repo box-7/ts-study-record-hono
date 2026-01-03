@@ -4,33 +4,33 @@
 // TypeScript におけるコンパイルとは、TypeScript のコードを JavaScript のコードに変換するプロセスのこと
 
 {
-        // TypeScript コンパイラのオプションを指定
-        "compilerOptions": {
-                "target": "ESNext",
-                "useDefineForClassFields": true,
-                "lib": ["DOM", "DOM.Iterable", "ESNext"],
-                "module": "ESNext",
-                "skipLibCheck": true,
-                "allowJs": false,
-                "moduleResolution": "Bundler",
-                // "allowImportingTsExtensions": true, // 削除
-                "isolatedModules": true,
-                "noEmit": false, // true → false
-                "outDir": "./dist",
-                "jsx": "react-jsx",
-                "strict": true,
-                "allowSyntheticDefaultImports": true,
-                "esModuleInterop": false,
-                "forceConsistentCasingInFileNames": true,
-                "resolveJsonModule": true,
-                "types": ["node", "jest", "@testing-library/jest-dom"],
-                "baseUrl": ".",
-                "paths": {
-                        "@/*": ["./src/*"]
-                }
-        },
-        // コンパイル対象のファイルやディレクトリを指定
-        "include": ["src"],
+  // TypeScript コンパイラのオプションを指定
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "allowJs": false,
+    "moduleResolution": "Bundler",
+    // "allowImportingTsExtensions": true, // 削除
+    "isolatedModules": true,
+    "noEmit": false, // true → false
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  // コンパイル対象のファイルやディレクトリを指定
+  "include": ["src"]
 }
 
 // compilerOptions:
@@ -86,7 +86,6 @@
 // include: ["src"]
 // コンパイル対象のファイルを含むディレクトリを指定する。この場合、src ディレクトリ内のファイルがコンパイル対象となる。
 
-
 // コメントアウトされたオプションの解説
 // allowJs: false
 // JavaScriptファイルのコンパイルを許可しない。TypeScriptファイルのみをコンパイル対象とする。
@@ -106,9 +105,6 @@
 // noFallthroughCasesInSwitch: true
 // switch 文のケースがフォールスルーする（次のケースに自動的に進む）ことを防ぐ。意図しないフォールスルーを防ぐために役立つ。
 // コメント: jinさんの設定にはあるが、あなたの設定にはなくても動作している。switch 文のバグを防ぐために有効にすることが推奨される。
-
-
-
 
 //       {
 //         "compilerOptions": {

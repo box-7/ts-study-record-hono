@@ -21,6 +21,13 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Record } from '@/domain/record';
 import { css } from '@emotion/react';
 
+import { hc } from 'hono/client'
+import type { AppType } from '../../server.ts';
+
+// 暫定対応としてany型を使用
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const client = hc<AppType>('http://localhost:3000/') as any;
+
 // RegistrationDialogコンポーネントに渡す「props（プロパティ）」の型定義（TypeScriptのインターフェース）
 interface RegistrationDialogProps {
   // propsとして渡すときも「Record型」として型チェックされます
@@ -65,11 +72,11 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
 
   const addTodo = async (title: string, time: number) => {
     try {
-      const res = await fetch('http://localhost:3000/records', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, time }),
-      });
+
+      console.log('Adding record with title:', title, 'and time:', time);
+      const res = await client.records.$post({ json: { title, time } });
+
+      console.log('Response from server:', res);
       if (!res.ok) {
         const errorText = await res.text();
         throw new Error(`登録失敗: ${errorText}`);
@@ -82,11 +89,7 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
 
   const updateRecord = async (id: string, title: string, time: number) => {
     try {
-      const res = await fetch(`http://localhost:3000/records/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, time }),
-      });
+      const res = await client.records[':id'].$put({ param: { id }, json: { title, time } });
       if (!res.ok) {
         const errorText = await res.text();
         throw new Error(`更新失敗: ${errorText}`);

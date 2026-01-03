@@ -6,6 +6,13 @@ import { css } from '@emotion/react';
 import RegistrationDialog from './components/ui/RegistrationDialog';
 import { FaBook } from 'react-icons/fa';
 
+import { hc } from 'hono/client'
+import type { AppType } from './server.ts';
+
+// 暫定対応としてany型を使用
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const client = hc<AppType>('http://localhost:3000/') as any;
+
 function App() {
   //「data」はRecord型の配列であることをTypeScriptに伝えています
   // dataの各要素は「id, title, timeを持つオブジェクト」であることが保証されます
@@ -15,7 +22,7 @@ function App() {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const res = await fetch('http://localhost:3000/records');
+    const res = await client.records.$get();
     const todoRecord = await res.json();
     setData(todoRecord);
     setIsLoading(false);
@@ -40,7 +47,7 @@ function App() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`http://localhost:3000/records/${id}`, { method: 'DELETE' });
+      await client.records[':id'].$delete({ param: { id } });
       fetchData();
     } catch (error) {
       if (error instanceof Error) {
