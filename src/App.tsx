@@ -1,21 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Record } from './domain/record';
-// import { GetAllRecords } from '@/lib/record';
-// import { RecordDelete } from './lib/record_delete';
-import { Spinner, Text, VStack, Center } from '@chakra-ui/react';
-import { Box, Button, Heading, Table } from '@chakra-ui/react';
+import { Spinner, Text, VStack, Center, Box, Button, Heading, Table } from '@chakra-ui/react';
 import { css } from '@emotion/react';
 import RegistrationDialog from './components/ui/RegistrationDialog';
 import { FaBook } from 'react-icons/fa';
 
 function App() {
+  //「data」はRecord型の配列であることをTypeScriptに伝えています
+  // dataの各要素は「id, title, timeを持つオブジェクト」であることが保証されます
   const [data, setData] = useState<Record[]>([]);
   const [totalTime, setTotalTime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // APIから全件取得
   const fetchData = async () => {
     setIsLoading(true);
     const res = await fetch('http://localhost:3000/records');
@@ -30,6 +27,9 @@ function App() {
 
   useEffect(() => {
     if (data) {
+      // data配列の各要素（record）のtimeをすべて合計して、calculatedTotalTimeにする
+      // accは累積値（最初は0）、recordは配列の各要素
+      // つまり「全レコードのtimeの合計」を計算している
       const calculatedTotalTime = data.reduce(
         (acc, record) => acc + record.time,
         0
@@ -37,7 +37,6 @@ function App() {
       setTotalTime(calculatedTotalTime);
     }
   }, [data]);
-
 
   const handleDelete = async (id: string) => {
     try {
@@ -53,7 +52,6 @@ function App() {
   };
 
   return (
-
     <>
       <div>
         {isLoading ? (
@@ -90,7 +88,6 @@ function App() {
                 <Box overflowX="auto" minWidth="600px">
                   <Table.Root
                     striped
-                  // interactive
                   >
                     <Table.Header>
                       <Table.Row>
@@ -117,17 +114,17 @@ function App() {
                                 // ChakraUIのcolorPalette='red'で、色の変更ができない
                                 // そのため、EmotionというCSS-in-JSライブラリで色を変える
                                 css={css`
-                                        background-color: red;
-                                        border-width: 1px;
-                                        border-color: black;
-                                        color: white;
-                                        cursor: pointer;
-                                        padding: 6px 10px; /* ボタンを小さくするためにパディングを調整 */
-                                        font-size: 18px; /* フォントサイズを小さくする */
-                                        &:hover {
-                                        background-color: darkred;
-                                        }
-                                        `}
+                                    background-color: red;
+                                    border-width: 1px;
+                                    border-color: black;
+                                    color: white;
+                                    cursor: pointer;
+                                    padding: 6px 10px; /* ボタンを小さくするためにパディングを調整 */
+                                    font-size: 18px; /* フォントサイズを小さくする */
+                                    &:hover {
+                                    background-color: darkred;
+                                    }
+                                    `}
                                 data-testid={`delete-button-${item.id}`}
                                 onClick={() => handleDelete(item.id)}
                               >

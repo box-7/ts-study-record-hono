@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect } from 'react';
-import { Dispatch, SetStateAction } from 'react';
+import React, { useEffect, Dispatch, SetStateAction } from 'react';
 import {
   DialogActionTrigger,
   DialogBody,
@@ -22,11 +21,16 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { Record } from '@/domain/record';
 import { css } from '@emotion/react';
 
+// RegistrationDialogコンポーネントに渡す「props（プロパティ）」の型定義（TypeScriptのインターフェース）
 interface RegistrationDialogProps {
+  // propsとして渡すときも「Record型」として型チェックされます
+  // 編集時に渡すレコード（新規登録時はundefined）
   item?: Record;
-  button?: string;
+  button?: string; // "registration"や"modification"など、どのボタンかを判別するための文字列
+  // Record型の配列をセットする関数
+  // 親コンポーネントのuseStateでデータを更新する関数
   setData: Dispatch<SetStateAction<Record[]>>;
-  fetchData: () => void;
+  fetchData: () => void; // データ再取得用の関数
 }
 
 interface FormValues {
@@ -38,7 +42,7 @@ interface FormValues {
 const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
   item,
   button,
-  setData,
+  setData, // 新規登録したあと、fetchDataを呼び出すためこちらは使っていない
   fetchData,
 }) => {
   const {
@@ -47,6 +51,7 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
     formState: { errors },
     reset,
     watch,
+    // setValueは、react-hook-formで「フォームの特定の値をプログラムから手動でセットする」ための関数
     setValue,
   } = useForm<FormValues>();
 
@@ -93,7 +98,6 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
   };
 
   const onClickCancelRecord = () => {
-
     reset({
       studyContent: '',
       studyHour: null,
