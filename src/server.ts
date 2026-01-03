@@ -9,17 +9,20 @@ import Database from 'better-sqlite3'
 // APIサーバーが他のドメイン（例：localhost:5173のフロントエンド）からリクエストされてもブロックされないようにする
 import { cors } from 'hono/cors';
 import { Record } from './domain/record'
+import { z } from 'zod';
+import { zValidator } from '@hono/zod-validator';
+
+const recordSchema = z.object({
+  title: z.string(),
+  time: z.number()
+});
 
 // Honoフレームワークのアプリケーションインスタンス（APIサーバー本体）を作成しています。
 // これにルーティングやミドルウェアを追加してAPIサーバーを構築します。
-// const app = new Hono()
-
 const app = new Hono()
-
 // better-sqlite3ライブラリを使って、mydb.sqliteというSQLiteデータベースファイルに接続しています。
 // dbはこのデータベースを操作するためのインスタンスです。
 const db = new Database('mydb.sqlite')
-
 
 // prepareは、better-sqlite3ライブラリのメソッドで、
 //「SQL文を事前に準備（プリコンパイル）して、繰り返し安全に実行できるようにする」ためのもの
@@ -39,11 +42,12 @@ app.get('/records', (c) => {
   return c.json(records);
 });
 
-app.post('/records', async (c) => {
-  // await c.req.json()リクエストボディ（JSON形式）をパースして取得
-  // {"title":"勉強","time":60} という文字列 → { title: "勉強", time: 60 } というオブジェクト
-  // Pick<Record, 'title' | 'time'> そのオブジェクトの型が「Record型のうちtitleとtimeだけを持つ部分型」であることをTypeScriptに伝えています。
-  const { title, time }: Pick<Record, 'title' | 'time'> = await c.req.json();
+// zValidator('json', recordSchema) の 'json' は「リクエストボディのContent-Typeがapplication/jsonであること」を意味します。
+// recordSchema（zodのスキーマ）で、titleがstring、timeがnumberであることを検証します。
+// バリデーションに失敗した場合は、自動的に400エラー（Bad Request）が返ります。
+app.post('/records', zValidator('json', recordSchema), async (c) => {
+  // zodバリデーション済みの値を取得
+  const { title, time } = c.req.valid('json');
   const id = crypto.randomUUID();
   // 'INSERT INTO study_record (id, title, time) VALUES (?, ?, ?)'
   // これは「id, title, timeの3つのカラムに値を挿入する」という意味のSQL文
