@@ -10,23 +10,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Box,
-  Button,
-  Input,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, Input, Stack, Text } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Record } from '@/domain/record';
 import { css } from '@emotion/react';
 
-import { hc } from 'hono/client'
-import type { AppType } from '../../server.ts';
+import { hc } from 'hono/client';
+import type { AppType } from '../../../server/app';
 
-// 暫定対応としてany型を使用
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const client = hc<AppType>('http://localhost:3000/') as any;
+const client = hc<AppType>('http://localhost:3000/');
 
 // RegistrationDialogコンポーネントに渡す「props（プロパティ）」の型定義（TypeScriptのインターフェース）
 interface RegistrationDialogProps {
@@ -72,32 +64,26 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
 
   const addTodo = async (title: string, time: number) => {
     try {
-
-      console.log('Adding record with title:', title, 'and time:', time);
       const res = await client.records.$post({ json: { title, time } });
-
-      console.log('Response from server:', res);
       if (!res.ok) {
         const errorText = await res.text();
         throw new Error(`登録失敗: ${errorText}`);
       }
       fetchData();
     } catch (error) {
-      alert(error instanceof Error ? error.message : '不明なエラーが発生しました');
+      alert(
+        error instanceof Error ? error.message : '不明なエラーが発生しました'
+      );
     }
   };
 
   const updateRecord = async (id: string, title: string, time: number) => {
-    try {
-      const res = await client.records[':id'].$put({ param: { id }, json: { title, time } });
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`更新失敗: ${errorText}`);
-      }
-      fetchData();
-    } catch (error) {
-      alert(error instanceof Error ? error.message : '不明なエラーが発生しました');
+    const res = await client.records[':id'].$put({ param: { id }, json: { title, time } });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`更新失敗: ${errorText}`);
     }
+    fetchData();
   };
 
   const onClickCancelRecord = () => {
@@ -166,7 +152,9 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
                       id="studyContent"
                       type="text"
                       width="100%"
-                      {...register('studyContent', { required: '内容の入力は必須です' })}
+                      {...register('studyContent', {
+                        required: '内容の入力は必須です',
+                      })}
                     />
                     {errors.studyContent && (
                       <Text color="red.500">{errors.studyContent.message}</Text>
@@ -179,7 +167,10 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
                       type="number"
                       {...register('studyHour', {
                         required: '時間の入力は必須です',
-                        min: { value: 0, message: '時間は0以上である必要があります' },
+                        min: {
+                          value: 0,
+                          message: '時間は0以上である必要があります',
+                        },
                       })}
                     />
                     {errors.studyHour && (
@@ -295,7 +286,9 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
                       id="studyContent"
                       type="text"
                       width="100%"
-                      {...register('studyContent', { required: '内容の入力は必須です' })}
+                      {...register('studyContent', {
+                        required: '内容の入力は必須です',
+                      })}
                     />
                     {errors.studyContent && (
                       <Text color="red.500">{errors.studyContent.message}</Text>
@@ -308,7 +301,11 @@ const RegistrationDialog: React.FC<RegistrationDialogProps> = ({
                       type="number"
                       {...register('studyHour', {
                         required: '時間の入力は必須です',
-                        min: { value: 0, message: '時間は0以上である必要があります' },
+                        min: {
+                          value: 0,
+                          message: '時間は0以上である必要があります',
+                        },
+                        valueAsNumber: true,
                       })}
                     />
                     {errors.studyHour && (

@@ -1,4 +1,6 @@
 /** @jsxImportSource @emotion/react */
+// Emotion（CSS-in-JSライブラリ）で「JSX記法のスタイル記述」を使うための特別なコメント
+
 import { useState, useEffect } from 'react';
 import { Record } from './domain/record';
 import { Spinner, Text, VStack, Center, Box, Button, Heading, Table } from '@chakra-ui/react';
@@ -7,11 +9,9 @@ import RegistrationDialog from './components/ui/RegistrationDialog';
 import { FaBook } from 'react-icons/fa';
 
 import { hc } from 'hono/client'
-import type { AppType } from './server.ts';
+import type { AppType } from '../server/app';
 
-// 暫定対応としてany型を使用
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const client = hc<AppType>('http://localhost:3000/') as any;
+const client = hc<AppType>('http://localhost:3000/');
 
 function App() {
   //「data」はRecord型の配列であることをTypeScriptに伝えています
@@ -112,7 +112,7 @@ function App() {
                             <Box display="flex">
                               <RegistrationDialog
                                 item={item}
-                                button="modifcation"
+                                button="modification"
                                 setData={setData}
                                 fetchData={fetchData}
                               />
